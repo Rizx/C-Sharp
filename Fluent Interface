@@ -1,0 +1,60 @@
+public class ElementBuilder : ITopSyntax, ILeftSyntax, IRightSyntax, IWidthSyntax
+{
+    private int _top;
+    private int _left;
+    private int _right;
+
+    public ElementBuilder(int top)
+    {
+        _top = top;
+    }
+
+    ILeftSyntax ITopSyntax.Left(int left)
+    {
+        _left = left;
+        return this;
+    }
+
+    IRightSyntax ILeftSyntax.Right(int right)
+    {
+        _right = right;
+        return this;
+    }
+
+    IWidthSyntax ILeftSyntax.Width(int width)
+    {
+        _right = width + _left;
+        return this;
+    }
+
+    Element IRightSyntax.Bottom(int bottom)
+    {
+        return new Element(_left, _top, _right, bottom);
+    }
+
+    Element IWidthSyntax.Height(int height)
+    {
+        return new Element(_left, _top, _right, _top + height);
+    }
+}
+
+internal interface ILeftSyntax
+{
+    IRightSyntax Right(int right);
+    IWidthSyntax Width(int width);
+}
+
+internal interface IRightSyntax
+{
+    Element Bottom(int bottom);
+}
+
+internal interface IWidthSyntax
+{
+    Element Height(int height);
+}
+
+internal interface ITopSyntax
+{
+    ILeftSyntax Left(int left);
+}
